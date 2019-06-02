@@ -859,6 +859,8 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             // If the system process isn't there we're doomed anyway.
         }
 
+        initCoreOverlays();
+
         createAndAddWindows();
 
         // Make sure we always have the most current wallpaper info.
@@ -1278,6 +1280,16 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
         mMinBrightness = pm.getMinimumScreenBrightnessSetting();
         mMaxBrightness = pm.getMaximumScreenBrightnessSetting();
+    }
+
+    private void initCoreOverlays(){
+        boolean aodAvailable = mContext.getResources().getBoolean(
+                    com.android.internal.R.bool.config_dozeAlwaysOnDisplayAvailable);
+        try{
+            mOverlayManager.setEnabled("com.google.android.setupwizard.overlay",
+                !aodAvailable, mLockscreenUserManager.getCurrentUserId());
+        } catch (RemoteException ignored) {
+        }
     }
 
     protected void createNavigationBar() {
